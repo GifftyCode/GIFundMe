@@ -8,7 +8,7 @@ contract CrowdFunding {
         string description;
         address payable recipient;
         uint value;
-        bool isCompleted;
+        bool Completed;
         uint noOfVoters;
         mapping (address => bool) voters; // Keeping track of those that has voted.
     }
@@ -22,5 +22,28 @@ contract CrowdFunding {
     uint public minimumContribution;
     uint public target;
     uint public noOfContributors;
+
+
+    constructor(uint _target, uint _deadline) {
+        target = _target;
+        deadline = _deadline;
+        minimumContribution = 100 wei;
+        manager = msg.sender;
+    }
+
+    modifier onlyManager () {
+        require(msg.sender == manager, 'You are not the manager');
+        _;
+    }
+
+    function createRequest(string calldata _description, address payable _recipient, uint _value) public onlyManager {
+        Request storage newRequest = requests[noOfRequests];
+        noOfRequests++;
+        newRequest.description = _description;
+        newRequest.recipient = _recipient;
+        newRequest.value = _value;
+        newRequest.Completed = false;
+        newRequest.noOfVoters = 0;
+    }
 
 }
