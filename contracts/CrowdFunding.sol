@@ -58,4 +58,16 @@ contract CrowdFunding {
         amountRaised += msg.value;
     }
 
+    function getContractBalance() public view returns(uint) {
+        return address(this).balance;
+    }
+
+    function refund() public {
+        require(block.timestamp > deadline && amountRaised < target, 'You are not eligible for a refund');
+        require(contributors[msg.sender] > 0, 'You are not a contributor');
+
+        payable(msg.sender).transfer(contributors[msg.sender]);
+        contributors[msg.sender] = 0;
+    }
+
 }
