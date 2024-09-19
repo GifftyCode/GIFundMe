@@ -81,4 +81,16 @@ contract CrowdFunding {
         thisRequest.noOfVoters++;
     }
 
+    function makePayment(uint _requestNo) public onlyManager {
+        require(amountRaised >= target, 'Target is not reached');
+
+        Request storage thisRequest = requests[_requestNo];
+
+        require(thisRequest.Completed == false, 'The request has been completed');
+        require(thisRequest.noOfVoters > noOfContributors/2, 'Majority not reached');
+
+        thisRequest.recipient.transfer(thisRequest.value);
+        thisRequest.Completed = true;
+    }
+
 }
