@@ -46,4 +46,16 @@ contract CrowdFunding {
         newRequest.noOfVoters = 0;
     }
 
+    function contribution() public payable {
+        require(block.timestamp < deadline, 'Deadline has passed');
+        require(msg.value > minimumContribution, 'Minimum contribution is 100 wei');
+
+        // This help to keep the number of contributors static when a previous contributor wants to contribute again
+        if(contributors[msg.sender] == 0) {
+            noOfContributors++;
+        }
+        contributors[msg.sender] += msg.value;
+        amountRaised += msg.value;
+    }
+
 }
